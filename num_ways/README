@@ -1,0 +1,12 @@
+num_ways:
+
+Create a recursive function that given :
+    - a number X of steps in a staircase
+    - a set of (a, b, c, ..) allowed steps per stride
+
+gives the number of ways you can climb the staircase, mixing the number of steps on every stride in any combination.
+eg.:
+    for X = 3 and (1, 2), you can climb the steps in 3 different ways :
+        - 1 step + 1 step + 1 step
+        - 2 steps + 1 step
+        - 1 step + 2 steps 
