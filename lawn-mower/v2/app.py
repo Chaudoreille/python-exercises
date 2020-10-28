@@ -67,21 +67,21 @@ def mower_generator(filepath):
         with open(filepath) as file:
             for line_number, line in enumerate(file):
                 if line_number == 0:
-                    if re.match(r'^\d+ +\d+$', line):
+                    if re.match(r'^ *\d+ +\d+ *$', line):
                         grid = line.strip().split()
                     else:
                         # @todo: proper error message
                         error(f'parsing error line {line_number}')
                         exit()
                 elif line_number % 2 == 1:
-                    if re.match(r'^\d+ +\d+ +[NEWS]$', line):
+                    if re.match(r'^ *\d+ +\d+ +[NEWS] *$', line):
                         initial_position = line.strip().split()
                     else:
                         # @todo: proper error message
                         error(f'parsing error line {line_number}')
                         exit()
                 else:
-                    if re.match(r'^[LRF]+$', line):
+                    if re.match(r'^ *[LRF]+ *$', line):
                         instructions = list(line.strip())
 
                         yield mower(grid, initial_position, instructions)
