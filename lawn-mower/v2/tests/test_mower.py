@@ -6,11 +6,11 @@ import os
 from ..app import MowerSyntaxError,get_lawn_dimensions,get_instruction_set,get_mower_starting_position
 
 lawn_dimensions_test_set = {
-    '5 5'        : True,
-    '10 210'     : True,
-    '    8 7   ' : True,
-    '    9 30'   : True,
-    '0 0   '     : True,
+    '5 5'        : ['5','5'],
+    '10 210'     : ['10','210'],
+    '    8 7   ' : ['8','7'],
+    '    9 30'   : ['9','30'],
+    '0 0   '     : ['0','0'],
     '0 F'        : False,
     'A B'        : False,
     '10'         : False,
@@ -22,11 +22,11 @@ lawn_dimensions_test_set = {
 }
 
 mower_starting_position_test_set = {
-    '5 5 N'        : True,
-    '10 210 W'     : True,
-    '    8 7   E'  : True,
-    '70 8 S'       : True,
-    '7 0 W'        : True,
+    '5 5 N'        : ['5','5', 'N'],
+    '10 210 W'     : ['10', '210', 'W'],
+    '    8 7   E'  : ['8', '7', 'E'],
+    '70 8 S'       : ['70', '8', 'S'],
+    '7 0 W'        : ['7', '0', 'W'],
     '75 80 NS'     : False,
     '7 8 N S'      : False,
     ''             : False,
@@ -36,10 +36,10 @@ mower_starting_position_test_set = {
 }
 
 instruction_test_set = {
-    'LRFRFLFLLFRRRLFLRFLFLF': True,
-    'L'                     : True,
-    ' LRFLRFLRFLRFL        ': True,
-    '   LRFLLLLLLLLFFF     ': True,
+    'LRFRFLFLLFRRRLFLRFLFLF': ['L','R','F','R','F','L','F','L','L','F','R','R','R','L','F','L','R','F','L','F','L','F'],
+    'L'                     : ['L'],
+    ' LRFLRFLR             ': ['L','R','F','L','R','F','L','R'],
+    '   LRFLLLLLLLLFFF     ': ['L','R','F','L','L','L','L','L','L','L','L','F','F','F'],
     'LRFRFLFLLFRRXLFLRFLFL' : False,
     '4                     ': False,
     ' LRF%FLRLR            ': False,
@@ -56,24 +56,24 @@ def fill_tmp_file(contents):
     return filename
 
 def run_test_set(test_function, test_set):
-    for test_case,should_succeed in test_set.items():
+    for test_case,expected_result in test_set.items():
         try:
-            test_function(test_case)
-            assert(should_succeed)
+            result = test_function(test_case)
+            assert(result == expected_result)
         except MowerSyntaxError:
-            assert(not should_succeed)
+            assert(expected_result == False)
 
+@pytest.mark.lexer_test
 def test_get_lawn_dimensions():
     run_test_set(test_function=get_lawn_dimensions, test_set=lawn_dimensions_test_set)
 
+@pytest.mark.lexer_test
 def test_get_mower_starting_position():
     run_test_set(test_function=get_mower_starting_position, test_set=mower_starting_position_test_set)
 
+@pytest.mark.lexer_test
 def test_get_instruction_set():
     run_test_set(test_function=get_instruction_set, test_set=instruction_test_set)
-
-def test_instructions_lexer():
-    pass
 
 def test_mower():
     pass
