@@ -1,17 +1,20 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 import unittest
+import re
 
 
 def count_occurences_in_text(word, text):
     """
     Return the number of occurences of the passed word (case insensitive) in text
     """
-
     # TODO: your code goes here, but it's OK to add new functions or import modules if needed
+    countWord = re.compile(r'\b{0}\b'.format(word), re.IGNORECASE)
+
+    return sum(1 for match in countWord.finditer(text))
 
     # This does not pass the unittests:
-    return text.count(word)
+    # return text.count(word)
 
 
 
