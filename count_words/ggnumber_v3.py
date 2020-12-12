@@ -9,7 +9,10 @@ def count_occurences_in_text(word, text):
     Return the number of occurences of the passed word (case insensitive) in text
     """
     # TODO: your code goes here, but it's OK to add new functions or import modules if needed
-    countWord = re.compile(r'\b{0}\b'.format(word), re.IGNORECASE)
+
+    # expression is a slightly modified version of r'\b{0}\b'.format(word) to pass all test cases
+    expression = r'(^|\'\'|[^a-zA-Z0-9\']){0}([^a-zA-Z0-9\']|\'\'|$)'.format(word)
+    countWord = re.compile(expression, re.IGNORECASE)
 
     return sum(1 for match in countWord.finditer(text))
 
