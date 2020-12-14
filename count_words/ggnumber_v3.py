@@ -1,75 +1,43 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 import unittest
-import re
 
 def char_range(a, b):
     return [chr(char) for char in range(ord(a), ord(b) + 1)]
 
 alpha_num = [element for lis in [char_range('a', 'z'), char_range('A', 'Z'), char_range('0', '9'), ['\'']] for element in lis]
 
-def multiple_quotes(haystack, index):
-    previous_quote = index == 0 or haystack[index - 1] == '\''
-    next_quote = index >= len(haystack) - 2 or haystack[index + 1] == '\''  
-
-    return haystack[index] == '\'' and (previous_quote or next_quote)
-
-def lazy_split(haystack, needle):
-    needle = needle.lower()
-    word_count = 0
-    seek = 0
-    state = 'compare'
-
-    for index,char in enumerate(haystack):
-        if state == 'match':
-            if seek > 0:
-                seek -= 1
-            else:
-                if multiple_quotes(haystack, index):
-                    continue
-                elif char in alpha_num:
-                    state = 'seek_end_word'
-                else:
-                    word_count += 1
-                    state = 'seek_next_word'
-        elif state == 'seek_end_word':
-            if not char in alpha_num:
-                state = 'seek_next_word'
-        elif state == 'seek_next_word':
-            if char in alpha_num:
-                state = 'compare'
-
-        if state == 'compare':
-            if char.lower() == needle[0]:
-                forward_seek = haystack[index:index + len(needle)]
-
-                if needle == forward_seek.lower():
-                    state = 'match'
-                    seek = len(needle) - 1
-                else:
-                    state = 'seek_end_word'
-            elif multiple_quotes(haystack, index):
-                state = 'seek_next_word'
-            else:
-                state = 'seek_end_word'
-
-    if state == 'match':
-        word_count += 1            
-    return word_count
-
+def check_lower_boundary(string, index):
+    if string == '' and index == 0:
+        return True
+    elif not string[-1] in alpha_num:
+        return True
+    elif len(string) > 1 and string[-1] == '\'' and string[-2] == '\'':
+        return True
+    return False
+    
+def check_upper_boundary(string, index, last_index):
+    if string == '' and index == last_index:
+        return True
+    elif not string[0] in alpha_num:
+        return True
+    elif len(string) > 1 and string[0] == '\'' and string[1] == '\'':
+        return True
+    return False
 
 def count_occurences_in_text(word, text):
     """
     Return the number of occurences of the passed word (case insensitive) in text
     """
-    # TODO: your code goes here, but it's OK to add new functions or import modules if needed
-    # expression = r'(^|\'\'|[^a-zA-Z0-9\']){0}([^a-zA-Z0-9\']|\'\'|$)'.format(word)
+    needle = word.lower()
+    boundaries = text.lower().split(needle)
+    count = 0
 
-    return lazy_split(text, word)
-    # This does not pass the unittests:
-    # return text.count(word)
+    for index,string in enumerate(boundaries):
+        if index < len(boundaries) - 1 and check_lower_boundary(string, index) and check_upper_boundary(boundaries[index + 1], index + 1, len(boundaries) -1):
+            count += 1
 
-
+    return count
 
 class TestCountOccurencesInText(unittest.TestCase):
     def test_count_occurences_in_text(self):
@@ -225,8 +193,8 @@ def doit():
 # Start the tests
 if __name__ == '__main__':
     # I need to be fast as well:
-    # import profile
-    # profile.run('doit()')
+    import profile
+    profile.run('doit()')
 
     # I need to pass the test:
     unittest.main()
