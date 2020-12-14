@@ -3,19 +3,50 @@
 import unittest
 import re
 
+def char_range(a, b):
+    return [chr(char) for char in range(ord(a), ord(b) + 1)]
+
+alpha_num = [element for lis in [char_range('a', 'z'), char_range('A', 'Z'), char_range('0', '9')] for element in lis]
+
+def lazy_split(haystack, needle):
+    word_start = 0
+
+    for index,character in enumerate(haystack):
+        if character == '\'':
+            if haystack[index - 1] == '\'':
+                word_start = index + 1
+        elif character in alpha_num:
+            pass
+        else:
+            if word_start < index:
+                yield haystack[word_start:index]
+                word_start = index + 1
+            else:
+                word_start += 1
+
+    # print('text[{0}:{1}] = {2}'.format(word_start, index, text[word_start:]))
+    
+    if word_start < index:
+        yield haystack[word_start:]
+    return
+
 
 def count_occurences_in_text(word, text):
     """
     Return the number of occurences of the passed word (case insensitive) in text
     """
     # TODO: your code goes here, but it's OK to add new functions or import modules if needed
+    # expression = r'(^|\'\'|[^a-zA-Z0-9\']){0}([^a-zA-Z0-9\']|\'\'|$)'.format(word)
 
-    # expression is a slightly modified version of r'\b{0}\b'.format(word) to pass all test cases
-    expression = r'(^|\'\'|[^a-zA-Z0-9\']){0}([^a-zA-Z0-9\']|\'\'|$)'.format(word)
-    countWord = re.compile(expression, re.IGNORECASE)
+    needle = word.lower()
+    count = 0
 
-    return sum(1 for match in countWord.finditer(text))
+    for match in lazy_split(text, word):
+        if needle == match.lower():
+            print('{0} == {1}'.format(needle, match))
+            count += 1
 
+    return count
     # This does not pass the unittests:
     # return text.count(word)
 
@@ -175,8 +206,8 @@ def doit():
 # Start the tests
 if __name__ == '__main__':
     # I need to be fast as well:
-    import profile
-    profile.run('doit()')
+    # import profile
+    # profile.run('doit()')
 
     # I need to pass the test:
     unittest.main()
