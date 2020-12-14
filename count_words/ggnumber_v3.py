@@ -6,29 +6,56 @@ import re
 def char_range(a, b):
     return [chr(char) for char in range(ord(a), ord(b) + 1)]
 
-alpha_num = [element for lis in [char_range('a', 'z'), char_range('A', 'Z'), char_range('0', '9')] for element in lis]
+alpha_num = [element for lis in [char_range('a', 'z'), char_range('A', 'Z'), char_range('0', '9'), ['\'']] for element in lis]
+
+def multiple_quotes(haystack, index):
+    previous_quote = index == 0 or haystack[index - 1] == '\''
+    next_quote = index >= len(haystack) - 2 or haystack[index + 1] == '\''  
+
+    return haystack[index] == '\'' and (previous_quote or next_quote)
 
 def lazy_split(haystack, needle):
-    word_start = 0
+    needle = needle.lower()
+    word_count = 0
+    seek = 0
+    state = 'compare'
 
-    for index,character in enumerate(haystack):
-        if character == '\'':
-            if haystack[index - 1] == '\'':
-                word_start = index + 1
-        elif character in alpha_num:
-            pass
-        else:
-            if word_start < index:
-                yield haystack[word_start:index]
-                word_start = index + 1
+    for index,char in enumerate(haystack):
+        if state == 'match':
+            if seek > 0:
+                seek -= 1
             else:
-                word_start += 1
+                if multiple_quotes(haystack, index):
+                    continue
+                elif char in alpha_num:
+                    state = 'seek_end_word'
+                else:
+                    word_count += 1
+                    state = 'seek_next_word'
+        elif state == 'seek_end_word':
+            if not char in alpha_num:
+                state = 'seek_next_word'
+        elif state == 'seek_next_word':
+            if char in alpha_num:
+                state = 'compare'
 
-    # print('text[{0}:{1}] = {2}'.format(word_start, index, text[word_start:]))
-    
-    if word_start < index:
-        yield haystack[word_start:]
-    return
+        if state == 'compare':
+            if char.lower() == needle[0]:
+                forward_seek = haystack[index:index + len(needle)]
+
+                if needle == forward_seek.lower():
+                    state = 'match'
+                    seek = len(needle) - 1
+                else:
+                    state = 'seek_end_word'
+            elif multiple_quotes(haystack, index):
+                state = 'seek_next_word'
+            else:
+                state = 'seek_end_word'
+
+    if state == 'match':
+        word_count += 1            
+    return word_count
 
 
 def count_occurences_in_text(word, text):
@@ -38,15 +65,7 @@ def count_occurences_in_text(word, text):
     # TODO: your code goes here, but it's OK to add new functions or import modules if needed
     # expression = r'(^|\'\'|[^a-zA-Z0-9\']){0}([^a-zA-Z0-9\']|\'\'|$)'.format(word)
 
-    needle = word.lower()
-    count = 0
-
-    for match in lazy_split(text, word):
-        if needle == match.lower():
-            print('{0} == {1}'.format(needle, match))
-            count += 1
-
-    return count
+    return lazy_split(text, word)
     # This does not pass the unittests:
     # return text.count(word)
 
