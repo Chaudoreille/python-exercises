@@ -5,39 +5,42 @@ import unittest
 def char_range(a, b):
     return [chr(char) for char in range(ord(a), ord(b) + 1)]
 
-alpha_num = [element for lis in [char_range('a', 'z'), char_range('A', 'Z'), char_range('0', '9'), ['\'']] for element in lis]
+alpha_num = [element for lis in [char_range('a', 'z'), char_range('0', '9'), ['\'']] for element in lis]
 
-def check_lower_boundary(string, index):
+def check_before_occurrence(string, index):
     if string == '' and index == 0:
-        return True
-    elif not string[-1] in alpha_num:
         return True
     elif len(string) > 1 and string[-1] == '\'' and string[-2] == '\'':
         return True
+    elif not string[-1] in alpha_num:
+        return True
     return False
     
-def check_upper_boundary(string, index, last_index):
+def check_after_occurrence(string, index, last_index):
     if string == '' and index == last_index:
         return True
-    elif not string[0] in alpha_num:
-        return True
     elif len(string) > 1 and string[0] == '\'' and string[1] == '\'':
+        return True
+    elif not string[0] in alpha_num:
         return True
     return False
 
 def count_occurences_in_text(word, text):
     """
     Return the number of occurences of the passed word (case insensitive) in text
+
+    splits the (lowercased) text with (lowercased) word
+    if the text boundaries before and after each occurrence show that it was a distinct word; increments counter
     """
-    needle = word.lower()
-    boundaries = text.lower().split(needle)
-    count = 0
+    match = word.lower()
+    boundaries = text.lower().split(match)
+    counter = 0
 
     for index,string in enumerate(boundaries):
-        if index < len(boundaries) - 1 and check_lower_boundary(string, index) and check_upper_boundary(boundaries[index + 1], index + 1, len(boundaries) -1):
-            count += 1
+        if index < len(boundaries) - 1 and check_before_occurrence(string, index) and check_after_occurrence(boundaries[index + 1], index + 1, len(boundaries) -1):
+            counter += 1
 
-    return count
+    return counter
 
 class TestCountOccurencesInText(unittest.TestCase):
     def test_count_occurences_in_text(self):
