@@ -1,8 +1,35 @@
-class BinaryTree:
-    def __init__(self, data):
+class Node:
+    def __init__(self, data=None):
         self.left = None
         self.right = None
         self.data = data
+
+    def __contains__(self, data):
+        if self.data:
+            if data == self.data:
+                return True
+            elif data < self.data:
+                if self.left:
+                    return data in self.left
+                else:
+                    return False
+            else:
+                if self.right:
+                    return data in self.right
+                else:
+                    return False
+        else:
+            return False
+
+    def __str__(self):
+        string = ""
+        if self.left:
+            string += str(self.left)+" "
+        if self.data:
+            string += "["+str(self.data)+"]"
+        if self.right:
+            string += " "+str(self.right)
+        return string
 
     def binary_search(self, data):
         pass
@@ -23,16 +50,17 @@ class BinaryTree:
         if self.data:
             if data < self.data:
                 if self.left is None:
-                    self.left = BinaryTree(data)
+                    self.left = Node(data)
                 else:
                     self.left.insert(data)
             elif data > self.data:
                 if self.right is None:
-                    self.right = BinaryTree(data)
+                    self.right = Node(data)
                 else:
                     self.right.insert(data)
         else:
             self.data = data
+        return self
 
     def remove(self, data):
         if self.data:
