@@ -59,6 +59,14 @@ class BinaryTreeMethods(unittest.TestCase):
         self.assertTrue(8 in tree)
         tree = tree.remove(8)
         self.assertFalse(8 in tree)
+        self.assertTrue(3 in tree)
+        tree = tree.remove(3)
+        self.assertFalse(3 in tree)
+        self.assertTrue(10 in tree)
+        tree = tree.remove(10)
+        self.assertFalse(10 in tree)
+        tree = tree.remove(10)
+        self.assertFalse(10 in tree)
 
 if __name__ == "__main__":
     unittest.main()

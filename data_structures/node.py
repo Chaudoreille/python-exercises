@@ -65,9 +65,15 @@ class Node:
     def remove(self, data):
         if self.data is not None:
             if data < self.data:
-                self.left = self.left.remove(data)
+                if not self.left:
+                    return self
+                else:
+                    self.left = self.left.remove(data)
             elif data > self.data:
-                self.right = self.right.remove(data)
+                if not self.right:
+                    return self
+                else:
+                    self.right = self.right.remove(data)
             else:
                 if not self.left and not self.right:
                     return None
