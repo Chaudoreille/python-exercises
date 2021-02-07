@@ -5,7 +5,7 @@ class Node:
         self.data = data
 
     def __contains__(self, data):
-        if self.data:
+        if self.data is not None:
             if data == self.data:
                 return True
             elif data < self.data:
@@ -25,7 +25,7 @@ class Node:
         string = ""
         if self.left:
             string += str(self.left)+" "
-        if self.data:
+        if self.data is not None:
             string += "["+str(self.data)+"]"
         if self.right:
             string += " "+str(self.right)
@@ -42,12 +42,12 @@ class Node:
 
     def max(self):
         if self.right:
-            return self.right.min()
+            return self.right.max()
         else:
             return self.data
 
     def insert(self, data):
-        if self.data:
+        if self.data is not None:
             if data < self.data:
                 if self.left is None:
                     self.left = Node(data)
@@ -63,7 +63,7 @@ class Node:
         return self
 
     def remove(self, data):
-        if self.data:
+        if self.data is not None:
             if data < self.data:
                 self.left = self.left.remove(data)
             elif data > self.data:
@@ -78,7 +78,7 @@ class Node:
                     self.data = self.left.max()
                     self.left = self.left.remove(self.data)
         return self
-                    
+
     def height(self):
         if not self.left and not self.right:
             return 1
@@ -89,4 +89,8 @@ class Node:
         else:
             return max(self.left.height(), self.right.height()) + 1
 
- 
+    # def balance(self):
+    #     if self.left:
+    #         self.left.balance()
+    #     if self.right:
+    #         self.right.balance()
