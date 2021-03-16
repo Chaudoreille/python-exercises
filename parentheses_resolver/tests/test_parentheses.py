@@ -1,96 +1,96 @@
 import pytest
-from parenthesis import parenthesis_match, longest_parenthesis
+from parentheses_resolver.parentheses import parentheses_match, longest_parenthesis
 
-class TestParenthesisMatch:
+class TestParenthesesMatch:
     def test_withEmptyString_shouldReturnTrue(self):
         # with
         empty = ""
         # when
-        result = parenthesis_match(empty)
+        result = parentheses_match(empty)
 
         # then
         assert result
 
-    def test_withOneParenthesisPair_shouldReturnTrue(self):
+    def test_withOneParenthesesPair_shouldReturnTrue(self):
         # with
         one_pair = "()"
         # when
-        result = parenthesis_match(one_pair)
+        result = parentheses_match(one_pair)
 
         # then
         assert result
 
-    def test_withExclusivelyMatchingParenthesis_shouldReturnTrue(self):
+    def test_withExclusivelyMatchingParentheses_shouldReturnTrue(self):
         # with
         multiple_pairs = "(((())(()())))()()"
 
         # when
-        result = parenthesis_match(multiple_pairs)
+        result = parentheses_match(multiple_pairs)
 
         # then
         assert result
 
-    def test_withExpressionContainingMatchingParenthesis_shouldReturnTrue(self):
+    def test_withExpressionContainingMatchingParentheses_shouldReturnTrue(self):
         # with
         expression = "(((2+4) * 3) + ((3 - 6) * 4) ^ 2) / 7 + (5 - (6))*(4)"
 
         # when
-        result = parenthesis_match(expression)
+        result = parentheses_match(expression)
 
         # then
         assert result
 
-    def test_withOnlyOneOpenedParenthesis_shouldReturnFalse(self):
+    def test_withOnlyOneOpenedParentheses_shouldReturnFalse(self):
         # with
         expression = "("
 
         # when
-        result = parenthesis_match(expression)
+        result = parentheses_match(expression)
 
         # then
         assert result == False
 
-    def test_withOnlyOneClosedParenthesis_shouldReturnFalse(self):
+    def test_withOnlyOneClosedParentheses_shouldReturnFalse(self):
         # with
         expression = ")"
 
         # when
-        result = parenthesis_match(expression)
+        result = parentheses_match(expression)
 
         # then
         assert result == False
 
-    def test_withMissingClosingParenthesis_shouldReturnFalse(self):
+    def test_withMissingClosingParentheses_shouldReturnFalse(self):
         # with
         expression = "(())(()"
 
         # when
-        result = parenthesis_match(expression)
+        result = parentheses_match(expression)
 
         # then
         assert result == False
 
-    def test_withOneTooManyClosingParenthesis_shouldReturnFalse(self):
+    def test_withOneTooManyClosingParentheses_shouldReturnFalse(self):
         # with
         expression = "(()))"
 
         # when
-        result = parenthesis_match(expression)
+        result = parentheses_match(expression)
 
         # then
         assert result == False
 
-    def test_withUnmatchedParenthesisInExpression_shouldReturnFalse(self):
+    def test_withUnmatchedParenthesesInExpression_shouldReturnFalse(self):
         # with
         expression = "(((2+4) * 3) + ((3 - 6) * 4) ^ 2) / 7 + (5 - )(6))*(4)"
 
         # when
-        result = parenthesis_match(expression)
+        result = parentheses_match(expression)
 
         # then
         assert result == False
 
-class TestLongestParenthesis:
+class TestLongestParentheses:
     def test_withEmptyString_shouldReturn0(self):
         # with
         expression = ""
@@ -128,7 +128,7 @@ class TestLongestParenthesis:
         assert result == 4
 
 
-    def test_withUnMatchedParenthesis_shouldReturn0(self):
+    def test_withUnMatchedParentheses_shouldReturn0(self):
         # with
         expression = "() (()) ("
         # when
